@@ -29,7 +29,7 @@ export default function Home() {
   return <div className={styles.container}>
     <div className={styles.intro}>
       <h1>Longify.it</h1>
-      <p>Easily longify english essays and make them sound classy as hell while you're at it :D</p>
+      <p>Easily longify english essays and make them sound classy as hell while you&apos;re at it :D</p>
     </div>
     <textarea placeholder="Input" className={styles.textarea} ref={ref} onInput={process} cols={30} rows={10}></textarea>
     <div className={styles.line} />
