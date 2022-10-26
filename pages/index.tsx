@@ -1,5 +1,5 @@
 import React, { createRef, useCallback, useEffect, useState } from 'react';
-import longify from '../longify';
+const longify = require('../longify.json');
 import styles from '../styles.module.scss';
 
 export type mode = 'weak' | 'normal' | 'extreme';
