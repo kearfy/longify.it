@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useState } from 'react';
 import longify from '../longify';
 import styles from '../styles.module.scss';
 
@@ -18,11 +18,7 @@ export default function Home() {
   const [result, setResult] = useState<string>("");
   const [mode, setMode] = useState<mode>("normal");
 
-  useEffect(() => {
-    process();
-  }, [mode]);
-
-  const process = () => {
+  const process = useCallback(() => {
     if (inputRef.current) {
       let res = inputRef.current?.value;
       for (var k in longify.weak) {
@@ -32,13 +28,17 @@ export default function Home() {
       };
       setResult(res);
     }
-  }
+  }, [inputRef, mode])
 
   const setModeHandler = () => {
     if (selectRef.current) {
       setMode(selectRef.current.value as mode);
     }
   }
+
+  useEffect(() => {
+    process();
+  }, [mode, process]);
 
   return <div className={styles.container}>
     <div className={styles.intro}>
