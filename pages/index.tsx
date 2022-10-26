@@ -1,28 +1,42 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import longify from '../longify';
 import styles from '../styles.module.scss';
 
-export const grabLongified = (k: keyof typeof longify): string | void => {
-  if (k in longify) {
-    const item = longify[k];
-    if (!item.startsWith('link:')) return item;
-    return grabLongified(item.split(':')[1] as keyof typeof longify);
-  }
+export type mode = 'weak' | 'normal' | 'extreme';
+
+export const grabLongified = (k: string, mode: mode = 'normal'): string | void => {
+  console.log(k);
+  k = longify.keywords[k] ?? k;
+  console.log(k);
+  
+  return longify[mode][k];
 }
 
 export default function Home() {
-  const ref = createRef<HTMLTextAreaElement>();
+  const inputRef = createRef<HTMLTextAreaElement>();
+  const selectRef = createRef<HTMLSelectElement>();
   const [result, setResult] = useState<string>("");
-  let index = 0;
+  const [mode, setMode] = useState<mode>("normal");
+
+  useEffect(() => {
+    process();
+  }, [mode]);
 
   const process = () => {
-    if (ref.current) {
-      let res = ref.current?.value;
-      for (var k in longify) {
-        const longified = grabLongified(k as keyof typeof longify);
+    if (inputRef.current) {
+      let res = inputRef.current?.value;
+      for (var k in longify.weak) {
+        const longified = grabLongified(k, mode);
         if (longified) res = res.replaceAll(new RegExp(k, 'ig'), longified)
+        console.log(longified);
       };
       setResult(res);
+    }
+  }
+
+  const setModeHandler = () => {
+    if (selectRef.current) {
+      setMode(selectRef.current.value as mode);
     }
   }
 
@@ -30,8 +44,18 @@ export default function Home() {
     <div className={styles.intro}>
       <h1>Longify.it</h1>
       <p>Easily longify english essays and make them sound classy as hell while you&apos;re at it :D</p>
+      <div className={styles.modeSelectionContainer}>
+        <b>
+          Select mode: 
+        </b>
+        <select defaultValue="normal" ref={selectRef} onInput={setModeHandler}>
+          <option value="weak">Weak mode</option>
+          <option value="normal">Normal mode</option>
+          <option value="extreme">Extreme mode</option>
+        </select>
+      </div>
     </div>
-    <textarea placeholder="Input" className={styles.textarea} ref={ref} onInput={process} cols={30} rows={10}></textarea>
+    <textarea placeholder="Input" className={styles.textarea} ref={inputRef} onInput={process} cols={30} rows={10}></textarea>
     <div className={styles.line} />
     <textarea placeholder="Output (readonly)" className={styles.textarea} disabled value={result} cols={30} rows={10}></textarea>
   </div>;

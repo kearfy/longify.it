@@ -40,3 +40,18 @@
         padding-bottom: 20px;
     }
 }
+
+.modeSelectionContainer {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15px;
+
+    & select {
+        height: 30px;
+        width: 140px;
+        padding: 0px 5px;
+        border-radius: 7px;
+    }
+}
